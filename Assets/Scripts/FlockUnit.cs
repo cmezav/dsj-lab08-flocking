@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FlockUnit : MonoBehaviour
@@ -45,7 +45,9 @@ public class FlockUnit : MonoBehaviour
         var obstacleVector = CalculateObstacleVector() * assignedFlock.obstacleWeight;
 
         var moveVector = cohesionVector + avoidanceVector + aligementVector
-            + boundsVector + obstacleVector;
+            + boundsVector + obstacleVector
+            + Lab08DiverExtras.GetFoodForce(this, myTransform.position)
+            + Lab08DiverExtras.GetFeedingSeparation(myTransform.position, avoidanceNeighbours);
 
         moveVector = Vector3.SmoothDamp(
             myTransform.forward, moveVector, ref currentVelocity, smoothDamp
@@ -152,7 +154,7 @@ public class FlockUnit : MonoBehaviour
             }
         }
 
-        // Sin vecinos visibles, el pez conserva su dirección.
+        // Sin vecinos visibles, el pez conserva su direcciÃ³n.
         if (neighboursInFOV == 0)
             return myTransform.forward;
 
@@ -164,7 +166,7 @@ public class FlockUnit : MonoBehaviour
     {
         var avoidanceVector = Vector3.zero;
 
-        // La separación consulta su propia lista de vecinos.
+        // La separaciÃ³n consulta su propia lista de vecinos.
         if (avoidanceNeighbours.Count == 0)
             return Vector3.zero;
 
@@ -181,7 +183,7 @@ public class FlockUnit : MonoBehaviour
             }
         }
 
-        // Sin vecinos visibles cerca, no se aplica separación.
+        // Sin vecinos visibles cerca, no se aplica separaciÃ³n.
         if (neighboursInFOV == 0)
             return Vector3.zero;
 
